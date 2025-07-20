@@ -13,6 +13,7 @@ import {
   UserRole 
 } from '@/types';
 import AuthService from '@/services/AuthService';
+import { LoadingScreen } from '@/components';
 
 // Import des écrans communs
 import LoginScreen from '@/screens/common/LoginScreen';
@@ -45,8 +46,8 @@ const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const ClientTab = createBottomTabNavigator<ClientStackParamList>();
 const ShopkeeperTab = createBottomTabNavigator<ShopkeeperStackParamList>();
 
-// Composant de chargement
-const LoadingScreen: React.FC = () => (
+// Composant de chargement simple pour la navigation
+const SimpleLoadingScreen: React.FC = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
     <ActivityIndicator size="large" color="#2196F3" />
     <Text style={{ marginTop: 16, fontSize: 16, color: '#666' }}>
@@ -323,7 +324,7 @@ const RoleBasedRouter: React.FC = () => {
 
   // Afficher l'écran de chargement
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Gestion d'Emprunts" subMessage="Initialisation..." />;
   }
 
   return (

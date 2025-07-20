@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { AuthStackParamList } from '@/types';
 import AuthService from '@/services/AuthService';
+import { LoadingButton } from '@/components';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -171,17 +172,14 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
 
             {/* Login Button */}
-            <TouchableOpacity
-              style={[styles.loginButton, isLoading && styles.disabledButton]}
+            <LoadingButton
+              title="Se connecter"
               onPress={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text style={styles.loginButtonText}>Se connecter</Text>
-              )}
-            </TouchableOpacity>
+              loading={isLoading}
+              loadingText="Connexion..."
+              icon="login"
+              style={styles.loginButton}
+            />
           </View>
 
           {/* Register Section */}

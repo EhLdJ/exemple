@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ClientStackParamList } from '@/types';
+import { QRLoadingScreen, LoadingButton } from '@/components';
 
 type Props = {
   navigation: NativeStackNavigationProp<ClientStackParamList, 'QRGenerator'>;
@@ -12,6 +13,15 @@ type Props = {
 
 const QRGeneratorScreen: React.FC<Props> = ({ navigation, route }) => {
   const { loanId } = route.params;
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateQR = () => {
+    setIsGenerating(true);
+    // Simuler la génération du QR
+    setTimeout(() => {
+      setIsGenerating(false);
+    }, 3000);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,8 +37,17 @@ const QRGeneratorScreen: React.FC<Props> = ({ navigation, route }) => {
         <Text style={styles.title}>Générateur QR</Text>
         <Text style={styles.subtitle}>
           Emprunt ID: {loanId}{'\n'}
-          (En cours de développement)
+          Générez votre QR code de paiement
         </Text>
+        
+        <LoadingButton
+          title="Générer QR Code"
+          onPress={handleGenerateQR}
+          loading={isGenerating}
+          loadingText="Génération..."
+          icon="qr-code"
+          style={styles.generateButton}
+        />
         
         <TouchableOpacity 
           style={styles.button}
@@ -36,6 +55,14 @@ const QRGeneratorScreen: React.FC<Props> = ({ navigation, route }) => {
         >
           <Text style={styles.buttonText}>Retour</Text>
         </TouchableOpacity>
+      </View>
+
+      <QRLoadingScreen 
+        visible={isGenerating}
+        message="Génération de votre QR Code sécurisé"
+        timeRemaining={300}
+        onComplete={() => setIsGenerating(false)}
+      />
       </View>
     </SafeAreaView>
   );
@@ -70,8 +97,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 40,
   },
+  generateButton: {
+    marginBottom: 20,
+  },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#666',
     paddingHorizontal: 30,
     paddingVertical: 12,
     borderRadius: 8,

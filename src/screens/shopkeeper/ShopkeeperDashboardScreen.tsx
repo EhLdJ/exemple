@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ShopkeeperStackParamList, ShopkeeperStats, Loan } from '@/types';
 import AuthService from '@/services/AuthService';
 import { ApiService } from '@/services/ApiService';
+import { PageLoader } from '@/components';
 
 type ShopkeeperDashboardNavigationProp = NativeStackNavigationProp<
   ShopkeeperStackParamList, 
@@ -320,6 +321,13 @@ const ShopkeeperDashboardScreen: React.FC<Props> = ({ navigation }) => {
         {/* Bottom Spacing */}
         <View style={styles.bottomSpacing} />
       </ScrollView>
+
+      {/* Page Loader for initial loading */}
+      <PageLoader 
+        visible={isLoading && !stats && recentLoans.length === 0} 
+        message="Chargement du tableau de bord..."
+        color="#4CAF50"
+      />
     </SafeAreaView>
   );
 };

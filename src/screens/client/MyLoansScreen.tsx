@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ClientStackParamList, Loan, PaymentStatus, LoanStatus } from '@/types';
 import AuthService from '@/services/AuthService';
 import { ApiService } from '@/services/ApiService';
+import { LoadingButton, PageLoader } from '@/components';
 
 type MyLoansScreenNavigationProp = NativeStackNavigationProp<ClientStackParamList, 'MyLoans'>;
 
@@ -119,6 +120,7 @@ const MyLoansScreen: React.FC<Props> = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [totalOwed, setTotalOwed] = useState(0);
+  const [payingAll, setPayingAll] = useState(false);
 
   const user = AuthService.getCurrentUser();
 
@@ -163,7 +165,7 @@ const MyLoansScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate('QRGenerator', { loanId: loan.id });
   };
 
-  const handlePayAll = () => {
+  const handlePayAll = async () => {
     if (totalOwed <= 0) {
       Alert.alert('Info', 'Vous n\'avez aucune dette en cours');
       return;
@@ -176,9 +178,13 @@ const MyLoansScreen: React.FC<Props> = ({ navigation }) => {
         { text: 'Annuler', style: 'cancel' },
         { 
           text: 'Générer QR', 
-          onPress: () => {
-            // Naviguer vers un écran de QR global ou gérer multiple QR
-            Alert.alert('Info', 'Fonctionnalité en cours de développement');
+          onPress: async () => {
+            setPayingAll(true);
+            // Simuler un délai de traitement
+            setTimeout(() => {
+              setPayingAll(false);
+              Alert.alert('Info', 'Fonctionnalité en cours de développement');
+            }, 2000);
           }
         }
       ]
@@ -253,10 +259,15 @@ const MyLoansScreen: React.FC<Props> = ({ navigation }) => {
 
         {totalOwed > 0 && (
           <View style={styles.paymentActions}>
-            <TouchableOpacity style={styles.payAllButton} onPress={handlePayAll}>
-              <Icon name="payment" size={20} color="#fff" />
-              <Text style={styles.payAllText}>Payer Tout</Text>
-            </TouchableOpacity>
+            <LoadingButton
+              title="Payer Tout"
+              onPress={handlePayAll}
+              loading={payingAll}
+              loadingText="Génération..."
+              icon="payment"
+              color="#4CAF50"
+              style={styles.payAllButton}
+            />
           </View>
         )}
       </View>
@@ -281,6 +292,13 @@ const MyLoansScreen: React.FC<Props> = ({ navigation }) => {
           contentContainerStyle={loans.length === 0 ? styles.emptyContainer : undefined}
         />
       </View>
+
+      {/* Page Loader for initial loading */}
+      <PageLoader 
+        visible={isLoading && loans.length === 0} 
+        message="Chargement des emprunts..."
+        color="#2196F3"
+      />
     </SafeAreaView>
   );
 };

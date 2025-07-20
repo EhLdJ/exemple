@@ -35,7 +35,9 @@
     "react-hook-form": "^7.45.0",
     "axios": "^1.4.0",
     "react-native-voice": "^3.2.4",
-    "react-native-permissions": "^3.8.0"
+    "react-native-permissions": "^3.8.0",
+    "react-native-image-picker": "^7.1.0",
+    "react-native-image-resizer": "^3.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

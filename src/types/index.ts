@@ -26,9 +26,65 @@ export interface User {
   name: string;
   role: UserRole;
   isVerified: boolean;
-  createdAt: string;
+  profileImage?: string;
   shopName?: string; // Pour les boutiquiers
+  shopDescription?: string;
+  shopAddress?: string;
+  shopLocation?: {
+    latitude: number;
+    longitude: number;
+  };
+  uniqueShopId?: string; // ID unique pour recherche
+  smsBalance?: number; // Solde SMS pour envoi de messages
+  createdAt: string;
   identityCard?: string; // Pour les clients
+}
+
+// Shop Types
+export interface Shop {
+  id: number;
+  shopkeeperId: number;
+  shopName: string;
+  shopDescription?: string;
+  shopAddress: string;
+  shopLocation?: {
+    latitude: number;
+    longitude: number;
+  };
+  uniqueShopId: string;
+  shopImage?: string;
+  isActive: boolean;
+  rating?: number;
+  totalClients: number;
+  totalLoans: number;
+  createdAt: string;
+  updatedAt: string;
+  shopkeeper: User;
+}
+
+// Relation Client-Boutique
+export interface ShopClientRelation {
+  id: number;
+  shopId: number;
+  clientId: number;
+  status: 'pending' | 'accepted' | 'rejected' | 'blocked';
+  requestedAt: string;
+  respondedAt?: string;
+  shop: Shop;
+  client: User;
+}
+
+// Demande d'emprunt
+export interface LoanRequest {
+  id: number;
+  fromClientId: number;
+  toShopId: number;
+  message?: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  respondedAt?: string;
+  client: User;
+  shop: Shop;
 }
 
 export interface AuthState {
@@ -46,8 +102,45 @@ export interface Product {
   price: number;
   quantity: number;
   category: string;
-  image?: string;
+  images?: string[]; // Multiple images pour les produits
   shopkeeperId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Image Types
+export interface ImageUpload {
+  id?: number;
+  originalName: string;
+  filename: string;
+  mimetype: string;
+  size: number;
+  url: string;
+  category: 'profile' | 'product' | 'loan' | 'document';
+  entityId?: number; // ID de l'entité associée
+  uploadedBy: number;
+  createdAt: string;
+}
+
+// SMS Types
+export interface SMSMessage {
+  id: number;
+  fromUserId: number;
+  toPhone: string;
+  message: string;
+  type: 'verification' | 'invitation' | 'notification' | 'reminder';
+  status: 'pending' | 'sent' | 'delivered' | 'failed';
+  cost: number; // Coût en crédits SMS
+  sentAt?: string;
+  deliveredAt?: string;
+  createdAt: string;
+}
+
+export interface SMSBalance {
+  userId: number;
+  balance: number; // Crédits SMS restants
+  lastRechargeAt?: string;
+  totalSpent: number;
 }
 
 // Loan Types
